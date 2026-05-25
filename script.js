@@ -28,7 +28,56 @@ document.addEventListener('DOMContentLoaded', function() {
         // Handle form submission
         if (e.target.classList.contains('form-button')) {
             e.preventDefault();
-            alert('Message sent! (This is a demo, so no actual message was sent)');
+            
+            const submitBtn = e.target;
+            const originalBtnText = submitBtn.textContent;
+            
+            // Get form data (using class-based selection since IDs might be multiple if content is reloaded)
+            const form = e.target.closest('form');
+            if (!form) return;
+
+            const name = form.querySelector('input[name="name"]').value;
+            const email = form.querySelector('input[name="email"]').value;
+            const company = form.querySelector('input[name="company"]').value;
+            const message = form.querySelector('textarea[name="message"]').value;
+
+            if (!name || !email || !message) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Change button state
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+            
+            fetch('https://formsubmit.co/ajax/liyachittilappilly@gmail.com', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    company: company,
+                    message: message
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert(`Thank you, ${name}! Your message has been sent successfully.`);
+                    form.reset();
+                } else {
+                    alert("Oops! There was a problem submitting your form. Please try again later.");
+                }
+            })
+            .catch(error => {
+                alert("Oops! There was a problem submitting your form. Please check your internet connection.");
+            })
+            .finally(() => {
+                submitBtn.textContent = originalBtnText;
+                submitBtn.disabled = false;
+            });
         }
     });
     
