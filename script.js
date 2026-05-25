@@ -49,19 +49,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // Change button state
             submitBtn.textContent = 'Sending...';
             submitBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('company', company);
+            formData.append('message', message);
             
             fetch('https://formsubmit.co/ajax/liyachittilappilly@gmail.com', {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    company: company,
-                    message: message
-                })
+                body: formData
             })
             .then(response => {
                 if (response.ok) {
